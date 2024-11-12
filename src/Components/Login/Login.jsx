@@ -1,12 +1,29 @@
-import React from "react";
+import React, { useContext, useState } from "react";
+import { AuthContext } from "../../Provider/AuthProvider";
 
 const Login = () => {
+  const { loginUser } = useContext(AuthContext);
+
+  const [errorMessage, setErrorMessage] = useState("");
+  const [success, setSuccess] = useState(false);
+
   const handleSubmitLogin = (e) => {
     e.preventDefault();
 
     const email = e.target.email.value;
     const password = e.target.password.value;
     console.log(email, password);
+
+    // Login user
+    loginUser(email, password)
+      .then((result) => {
+        console.log(result.user);
+        setSuccess(true);
+      })
+      .catch((error) => {
+        console.log("ERROR", error.message);
+        setErrorMessage(error.message);
+      });
   };
   return (
     <div className="hero min-h-screen">
@@ -45,11 +62,13 @@ const Login = () => {
                 </a>
               </label>
             </div>
-            <div className="form-control mt-6">
+            <div className="form-control mt-6 mb-3">
               <button type="submit" className="btn btn-primary">
                 Login
               </button>
             </div>
+            {errorMessage && <p className="text-red-600">{errorMessage}</p>}
+            {success && <p className="text-green-600">Login Successful!</p>}
           </form>
         </div>
       </div>
