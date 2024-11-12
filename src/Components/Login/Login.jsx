@@ -1,8 +1,10 @@
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../Provider/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const { loginUser } = useContext(AuthContext);
+  const { loginUser, signInWithGoogle } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const [errorMessage, setErrorMessage] = useState("");
   const [success, setSuccess] = useState(false);
@@ -19,10 +21,24 @@ const Login = () => {
       .then((result) => {
         console.log(result.user);
         setSuccess(true);
+        e.target.reset();
+        navigate("/");
       })
       .catch((error) => {
         console.log("ERROR", error.message);
         setErrorMessage(error.message);
+      });
+  };
+
+  //   sign in with google
+  const handleSignInWithGoogle = () => {
+    signInWithGoogle()
+      .then((result) => {
+        console.log(result.user);
+        navigate("/");
+      })
+      .catch((error) => {
+        console.log("ERROR", error.message);
       });
   };
   return (
@@ -70,6 +86,11 @@ const Login = () => {
             {errorMessage && <p className="text-red-600">{errorMessage}</p>}
             {success && <p className="text-green-600">Login Successful!</p>}
           </form>
+        </div>
+        <div>
+          <button onClick={handleSignInWithGoogle} className="btn btn-ghost ">
+            Sign in with google
+          </button>
         </div>
       </div>
     </div>

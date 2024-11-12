@@ -1,8 +1,10 @@
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../Provider/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const { createUser } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const [errorMessage, setErrorMessage] = useState("");
   const [success, setSuccess] = useState(false);
@@ -28,6 +30,8 @@ const Register = () => {
       .then((result) => {
         console.log(result.user);
         setSuccess(true);
+        e.target.reset();
+        navigate("/");
       })
       .catch((error) => {
         console.log("ERROR", error.message);
